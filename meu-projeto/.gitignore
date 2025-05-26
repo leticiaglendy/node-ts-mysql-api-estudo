@@ -1,0 +1,26 @@
+# Ignorar node_modules de todos os projetos
+**/node_modules/
+
+# Ignorar arquivos de ambiente em todos os projetos
+**/.env
+**/.env.*.local
+
+# Logs
+**/*.log
+
+# Pastas comuns de build ou cache
+**/dist/
+**/build/
+**/.next/
+**/.cache/
+
+# IDEs
+**/.vscode/
+**/.idea/
+
+# Cobertura de testes
+**/coverage/
+
+# Outros arquivos temporários
+**/tmp/
+**/temp/
