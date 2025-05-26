@@ -1,0 +1,54 @@
+readme.md
+
+# 📦 API Simples com Node.js, TypeScript e MySQL
+
+Este projeto é uma API REST básica criada com **Node.js**, **Express**, **TypeScript** e **MySQL**, com foco em simplicidade e organização mínima. Ideal para aprendizado, protótipos ou aplicações de pequeno porte.
+
+## 🚀 Funcionalidades
+
+A API oferece CRUD completo para 3 recursos:
+
+- **Usuários**
+- **Produtos**
+- **Pedidos**
+
+## 🛠️ Tecnologias
+
+- [Node.js](https://nodejs.org/)
+- [Express](https://expressjs.com/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [MySQL](https://www.mysql.com/)
+- [mysql2 (driver)](https://www.npmjs.com/package/mysql2)
+
+---
+
+
+---
+
+## 🧑‍💻 Instalação
+
+### 1. Clone o projeto
+
+```bash
+git clone https://github.com/seu-usuario/seu-repositorio.git
+cd seu-repositorio
+
+2.Instale as dependencias
+
+npm install
+
+##Rodando a Api
+npm run dev
+
+##Requisitos
+
+Node.js 18+
+
+MySQL 5.7+ ou MariaDB
+
+npm
+
+✍️ Autor
+Desenvolvido por [Seu Nome] - [seu@email.com]
+
+

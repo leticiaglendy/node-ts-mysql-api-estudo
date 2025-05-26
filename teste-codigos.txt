@@ -1,0 +1,130 @@
+teste meu projeto 2
+
+src/
+├── controllers/
+│   ├── userController.ts
+│   ├── productController.ts
+│   └── orderController.ts
+├── services/
+│   ├── userService.ts
+│   ├── productService.ts
+│   └── orderService.ts
+├── routes/
+│   ├── users.ts
+│   ├── products.ts
+│   └── orders.ts
+└── index.ts
+
+--------------------------
+ Banco de dados (conexão única)
+import mysql from 'mysql2/promise';
+
+export const db = mysql.createPool({
+  host: 'localhost',
+  user: 'root',
+  password: '',
+  database: 'api_db',
+});
+------------------------------
+controllers/userController.ts
+
+import { Request, Response } from 'express';
+import * as userService from '../services/userService';
+
+export async function getAllUsers(req: Request, res: Response) {
+  const users = await userService.getAllUsers();
+  res.json(users);
+}
+
+export async function getUser(req: Request, res: Response) {
+  const id = Number(req.params.id);
+  const user = await userService.getUserById(id);
+  if (user.length > 0) res.json(user[0]);
+  else res.status(404).json({ message: 'Usuário não encontrado' });
+}
+
+export async function createUser(req: Request, res: Response) {
+  const { name, email } = req.body;
+  await userService.createUser(name, email);
+  res.status(201).json({ message: 'Usuário criado' });
+}
+
+export async function updateUser(req: Request, res: Response) {
+  const id = Number(req.params.id);
+  const { name, email } = req.body;
+  const updated = await userService.updateUser(id, name, email);
+  if (updated) res.json({ message: 'Usuário atualizado' });
+  else res.status(404).json({ message: 'Usuário não encontrado' });
+}
+
+export async function deleteUser(req: Request, res: Response) {
+  const id = Number(req.params.id);
+  const deleted = await userService.deleteUser(id);
+  if (deleted) res.json({ message: 'Usuário deletado' });
+  else res.status(404).json({ message: 'Usuário não encontrado' });
+}
+
+----------------------------------------------------------------
+services/userService.ts
+
+import { db } from '../db';
+import { RowDataPacket } from 'mysql2';
+
+export async function getAllUsers() {
+  const [rows] = await db.query<RowDataPacket[]>('SELECT * FROM users');
+  return rows;
+}
+
+export async function getUserById(id: number) {
+  const [rows] = await db.query<RowDataPacket[]>('SELECT * FROM users WHERE id = ?', [id]);
+  return rows;
+}
+
+export async function createUser(name: string, email: string) {
+  await db.query('INSERT INTO users (name, email) VALUES (?, ?)', [name, email]);
+}
+
+export async function updateUser(id: number, name: string, email: string) {
+  const [result] = await db.query('UPDATE users SET name = ?, email = ? WHERE id = ?', [name, email, id]);
+  return (result as any).affectedRows > 0;
+}
+
+export async function deleteUser(id: number) {
+  const [result] = await db.query('DELETE FROM users WHERE id = ?', [id]);
+  return (result as any).affectedRows > 0;
+}
+
+------------------------------------------------------------------
+routes/users.ts
+
+import express from 'express';
+import * as userController from '../controllers/userController';
+
+const router = express.Router();
+
+router.get('/', userController.getAllUsers);
+router.get('/:id', userController.getUser);
+router.post('/', userController.createUser);
+router.put('/:id', userController.updateUser);
+router.delete('/:id', userController.deleteUser);
+
+export default router;
+
+---------------------------------------------------------
+index.ts
+
+import express from 'express';
+import userRoutes from './routes/users';
+import productRoutes from './routes/products';
+import orderRoutes from './routes/orders';
+
+const app = express();
+app.use(express.json());
+
+app.use('/users', userRoutes);
+app.use('/products', productRoutes);
+app.use('/orders', orderRoutes);
+
+app.listen(3000, () => {
+  console.log('API rodando em http://localhost:3000');
+});
